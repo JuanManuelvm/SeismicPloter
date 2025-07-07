@@ -1,0 +1,5 @@
+# requirements_minimal.txt
+obspy>=1.4.0,<2.0.0  # Procesamiento sísmico (incluye seedlink)
+numpy>=1.21.0        # Requisito de ObsPy
+matplotlib>=3.5.0    # Visualización
+requests>=2.28.0     # Conexiones HTTP
