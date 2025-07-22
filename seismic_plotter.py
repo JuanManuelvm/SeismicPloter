@@ -15,6 +15,7 @@ from collections import defaultdict
 import os
 import urllib3
 from matplotlib.widgets import CheckButtons
+import datetime
 
 # Deshabilitar advertencias de SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -102,9 +103,9 @@ class SeismicPlotter:
     def setup_figure(self):
         """Configura la figura principal"""
         fig = plt.figure(figsize=(16, 10), dpi=100)
-        fig.suptitle('Monitor Sísmico - Selector de Estaciones', y=0.98, 
-                    fontsize=12, fontweight='bold')
-        
+        fig.canvas.manager.set_window_title("Monitor Sísmico")  # Aquí el nuevo nombre de la ventana
+        self.title_text = fig.suptitle('', y=0.98, fontsize=12, fontweight='bold')
+
         # Área para el selector (lado derecho)
         selector_ax = plt.axes([0.85, 0.1, 0.13, 0.8])
         selector_ax.set_title('Estaciones Disponibles', pad=10)
@@ -257,6 +258,12 @@ class SeismicPlotter:
         plt.close(self.fig)
 
     def update_plot(self, frame):
+        # Actualizar el reloj en el título
+        now = datetime.datetime.now()
+        fecha_str = now.strftime("%A, %d de %B de %Y")
+        hora_str = now.strftime("%H:%M:%S")
+        self.title_text.set_text(f'Monitor Sísmico | {hora_str} - {fecha_str}')
+
         """Actualiza las gráficas con nuevos datos"""
         current_time = UTCDateTime.now()
         artists = []
@@ -279,7 +286,7 @@ class SeismicPlotter:
                 times = np.linspace(0, len(tr.data)/tr.stats.sampling_rate, len(tr.data))
                 
                 self.plot_elements['lines'][i].set_data(times, tr.data)
-                self.plot_elements['lines'][i].set_color('#1f77b4')
+                self.plot_elements['lines'][i].set_color("#c94949") #1f77b4
                 
                 # Ajustar escala dinámica
                 data_range = max(1, np.max(np.abs(tr.data)) * 1.2)
